@@ -14,19 +14,6 @@ Comment2 ""
 Comment3 ""
 Comment4 ""
 $EndDescr
-$Comp
-L power:+12V #PWR01
-U 1 1 5DD3FD8D
-P 700 1850
-F 0 "#PWR01" H 700 1700 50  0001 C CNN
-F 1 "+12V" H 715 2023 50  0000 C CNN
-F 2 "" H 700 1850 50  0001 C CNN
-F 3 "" H 700 1850 50  0001 C CNN
-	1    700  1850
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	700  1850 800  1850
 Text GLabel 7950 750  0    50   Input ~ 0
 Associate\DIO5\AD5
 Text GLabel 8050 1150 0    50   Input ~ 0
@@ -54,17 +41,6 @@ F 3 "~" H 3150 1300 50  0001 C CNN
 	0    -1   -1   0   
 $EndComp
 $Comp
-L Diode:1N4007 D1
-U 1 1 5DD4DAFE
-P 1000 850
-F 0 "D1" H 1000 634 50  0000 C CNN
-F 1 "1N4007" H 1000 725 50  0000 C CNN
-F 2 "Diode_THT:D_DO-41_SOD81_P10.16mm_Horizontal" H 1000 675 50  0001 C CNN
-F 3 "http://www.vishay.com/docs/88503/1n4001.pdf" H 1000 850 50  0001 C CNN
-	1    1000 850 
-	-1   0    0    1   
-$EndComp
-$Comp
 L Device:CP1 CP3
 U 1 1 5DD4FCA2
 P 1350 1000
@@ -80,10 +56,6 @@ Wire Wire Line
 Connection ~ 1350 850 
 Wire Wire Line
 	1350 850  1550 850 
-Wire Wire Line
-	800  1850 800  850 
-Wire Wire Line
-	800  850  850  850 
 Text GLabel 3250 850  2    50   Input ~ 0
 Vcc3.3V
 Wire Wire Line
@@ -337,7 +309,6 @@ F 3 "~" H 1150 1000 50  0001 C CNN
 	1    1150 1000
 	1    0    0    -1  
 $EndComp
-Connection ~ 1150 850 
 $Comp
 L Device:C C2
 U 1 1 5DD6040D
@@ -576,4 +547,18 @@ Wire Wire Line
 	7900 2200 7400 2200
 Wire Wire Line
 	7300 2200 7150 2200
+$Comp
+L power:+12V #PWR01
+U 1 1 5DD782C8
+P 900 850
+F 0 "#PWR01" H 900 700 50  0001 C CNN
+F 1 "+12V" H 915 1023 50  0000 C CNN
+F 2 "" H 900 850 50  0001 C CNN
+F 3 "" H 900 850 50  0001 C CNN
+	1    900  850 
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1150 850  900  850 
+Connection ~ 1150 850 
 $EndSCHEMATC
