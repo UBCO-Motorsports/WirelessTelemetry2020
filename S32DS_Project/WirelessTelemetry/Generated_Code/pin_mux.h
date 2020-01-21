@@ -7,7 +7,7 @@
 **     Version     : Component 1.2.0, Driver 1.4, CPU db: 3.00.000
 **     Repository  : SDK_S32K116_00
 **     Compiler    : GNU C Compiler
-**     Date/Time   : 2019-11-21, 16:46, # CodeGen: 0
+**     Date/Time   : 2020-01-20, 17:11, # CodeGen: 0
 **     Abstract    :
 **
 **     Settings    :
@@ -37,8 +37,8 @@
 **              Peripheral Type CAN                        : 
 **                Custom name                              : CAN0
 **                CAN0                                     : 
-**                  CAN Receiver Input                     : <Automatic>
-**                  CAN Transmitter Output                 : <Automatic>
+**                  CAN Receiver Input                     : PTE4
+**                  CAN Transmitter Output                 : PTE5
 **              Peripheral Type CMP                        : 
 **                Custom name                              : CMP0
 **                CMP0                                     : 
@@ -145,10 +145,10 @@
 **                  Direction                              : <Automatic>
 **                  Pin GPIO11                             : <Automatic>
 **                  Direction                              : <Automatic>
-**                  Pin GPIO12                             : <Automatic>
-**                  Direction                              : <Automatic>
-**                  Pin GPIO13                             : <Automatic>
-**                  Direction                              : <Automatic>
+**                  Pin GPIO12                             : PTA12
+**                  Direction                              : Output
+**                  Pin GPIO13                             : PTA13
+**                  Direction                              : Output
 **                Custom name                              : PTB
 **                PTB                                      : 
 **                  Pin GPIO0                              : <Automatic>
@@ -241,15 +241,15 @@
 **              Peripheral Type LPSPI                      : 
 **                Custom name                              : LPSPI0
 **                LPSPI0                                   : 
-**                  LPSPI Peripheral Chip Select 0         : <Automatic>
+**                  LPSPI Peripheral Chip Select 0         : PTB0
 **                  Direction                              : <Automatic>
 **                  LPSPI Peripheral Chip Select 1         : <Automatic>
 **                  Direction                              : <Automatic>
-**                  LPSPI Serial Clock                     : <Automatic>
+**                  LPSPI Serial Clock                     : PTB2
 **                  Direction                              : <Automatic>
-**                  LPSPI Serial Data Input                : <Automatic>
+**                  LPSPI Serial Data Input                : PTB3
 **                  Direction                              : <Automatic>
-**                  LPSPI Serial Data Output               : <Automatic>
+**                  LPSPI Serial Data Output               : PTB1
 **                  Direction                              : <Automatic>
 **              Peripheral Type LPTMR                      : 
 **                Custom name                              : LPTMR0
@@ -261,8 +261,8 @@
 **                LPUART0                                  : 
 **                  LPUART Clear to Send                   : <Automatic>
 **                  LPUART Request to Send                 : <Automatic>
-**                  LPUART Receive Data                    : <Automatic>
-**                  LPUART Transmit Data                   : <Automatic>
+**                  LPUART Receive Data                    : PTC2
+**                  LPUART Transmit Data                   : PTC3
 **                  Direction                              : <Automatic>
 **                Custom name                              : LPUART1
 **                LPUART1                                  : 
