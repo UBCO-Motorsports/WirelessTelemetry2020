@@ -1,10 +1,20 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -116,6 +126,8 @@ public class CommunicationView extends JPanel {
 			portCombobox.setEnabled(false);
 			baudRateCombobox.setEnabled(false);
 			portNumberCombobox.setEnabled(false);
+			
+			
 			connectButton.setEnabled(false);
 			
 			if(connectButton.getText().equals("Connect")) {
@@ -134,6 +146,7 @@ public class CommunicationView extends JPanel {
 				portCombobox.setEnabled(false);
 				baudRateCombobox.setEnabled(false);
 				portNumberCombobox.setEnabled(false);
+				
 				connectButton.setEnabled(true);
 				if(CommunicationController.getPort() == Communication.PORT_FILE)
 					connectButton.setText("Finish");
@@ -184,8 +197,80 @@ public class CommunicationView extends JPanel {
 					portCombobox.removeItemAt(index);
 			}
 		});
+		JTextField sendserialtext = new JTextField("Write to Serial.");
+		sendserialtext.setVisible(false);
+		sendserialtext.setSize(10,8);
+		CommunicationController.addConnectionListener(connected -> {
+			if(connected) {
+				if(Communication.port.startsWith(Communication.PORT_UART + ": ")) {
+					sendserialtext.setVisible(true);
+					sendserialtext.setEnabled(true);
+				
+					
+
+					}
+				}
+			else {
+				sendserialtext.setVisible(false);
+			}
+			});
+		sendserialtext.addActionListener(new ActionListener()
+		{
+		  public void actionPerformed(ActionEvent e)
+		  {
+			  String serialoutput = sendserialtext.getText();
+		    	byte[] sendbytes;
+		    	sendbytes = serialoutput.getBytes();
+		    	sendserialtext.setText("");
+		    	System.out.println(serialoutput);
+		    	System.out.println(sendbytes + "  arr length:" + sendbytes.length);
+		    	try {
+					CommunicationController.sendoutput(sendbytes);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		  }
+		});
+		sendserialtext.addFocusListener(new FocusListener() {
+
+            @Override
+            public void focusGained(FocusEvent e) {
+            sendserialtext.setText("");
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+            sendserialtext.setText("Write to Serial");
+            }
+        });
+		
+		
+		JButton RefreshButton = new JButton ("Refresh");
+		CommunicationController.addConnectionListener(connected -> {
+			if(connected) {
+				RefreshButton.setVisible(false);
+			}
+			else
+			{
+				RefreshButton.setVisible(true);
+			}
+			});
+			
+		RefreshButton.addActionListener(new ActionListener()
+			{
+			  public void actionPerformed(ActionEvent e)
+			  {
+				  JComboBox<String> portCombobox = new JComboBox<String>(CommunicationController.getPorts());
+			  }	
+			});
+			
+		
+		
 		
 		// show the components
+		add(Box.createHorizontalStrut(10));
+		add (sendserialtext);
 		add(Box.createHorizontalStrut(5));
 		add(new JLabel("Sample Rate (Hz)"));
 		add(Box.createHorizontalStrut(5));
@@ -199,6 +284,8 @@ public class CommunicationView extends JPanel {
 		add(portNumberCombobox);
 		add(Box.createHorizontalStrut(5));
 		add(connectButton);
+		add(Box.createHorizontalStrut(5));
+		add(RefreshButton);
 		
 		setMinimumSize(getPreferredSize());
 

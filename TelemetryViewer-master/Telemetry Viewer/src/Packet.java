@@ -1,5 +1,7 @@
 import java.awt.Color;
 import java.io.InputStream;
+import java.io.OutputStream;
+
 import javax.swing.JFrame;
 
 /**
@@ -83,6 +85,7 @@ public abstract class Packet {
 	
 	public abstract void showDataStructureWindow(JFrame parentWindow, boolean testMode);
 	public abstract void startReceivingData(InputStream stream);
+	public abstract void startSendingUartData(OutputStream stream);
 	public abstract void stopReceivingData();
 
 }

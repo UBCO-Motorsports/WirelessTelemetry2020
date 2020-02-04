@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
@@ -47,6 +48,7 @@ public class ControlsRegion extends JPanel {
 			}
 			
 		});
+		
 		
 		JButton saveLayoutButton = new JButton("Save Layout");
 		saveLayoutButton.setEnabled(false);
@@ -136,6 +138,9 @@ public class ControlsRegion extends JPanel {
 			JOptionPane.showMessageDialog(parentWindow, panel, "Help", JOptionPane.PLAIN_MESSAGE);
 
 		});
+	
+		
+		
 		
 		// show the components
 		add(settingsButton);
