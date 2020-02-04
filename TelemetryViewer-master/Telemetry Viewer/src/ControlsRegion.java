@@ -120,6 +120,8 @@ public class ControlsRegion extends JPanel {
 			                  "Click the \"Export CSV Log\" button to save all of your acquired samples to a CSV file.<br>" +
 			                  "Click the \"Reset\" button to remove all charts.<br><br>" +
 			                  "Layout files and CSV log files can also be opened via drag-n-drop.<br><br>" +
+			                  "<b>The List of supported Serial Commands includes:</b><br>"+
+			                  "eng-off engine shutdown<br><br>"+
 			                  "Author: Farrell Farahbod<br>" +
 			                  "This software is free and open source.</html>";
 			JLabel helpLabel = new JLabel(helpText);

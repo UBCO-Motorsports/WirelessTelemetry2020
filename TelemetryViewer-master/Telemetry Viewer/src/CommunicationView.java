@@ -262,8 +262,17 @@ public class CommunicationView extends JPanel {
 			  public void actionPerformed(ActionEvent e)
 			  {
 				  JComboBox<String> portCombobox = new JComboBox<String>(CommunicationController.getPorts());
-			  }	
-			});
+				  CommunicationController.addPortListener(newPort -> {
+						for(int i = 0; i < portCombobox.getItemCount(); i++)
+							if(portCombobox.getItemAt(i).equals(newPort)) {
+								portCombobox.setSelectedIndex(i);
+								return;
+							}
+						// port is not in the list, so add it
+						portCombobox.addItem(newPort);
+						portCombobox.setSelectedItem(newPort);
+			  });	
+			}});
 			
 		
 		
