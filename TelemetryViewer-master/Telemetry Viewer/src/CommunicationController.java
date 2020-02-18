@@ -1,5 +1,7 @@
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.net.DatagramPacket;
@@ -11,8 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
-
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
@@ -613,24 +616,55 @@ public class CommunicationController {
 		t.start();
 		
 		Communication.packet.startReceivingData(uartPort.getInputStream());
-		
+		Communication.packet.startSendingUartData(uartPort.getOutputStream());
 	}
 	
 	/**
 	 * Stops the serial port receiver thread and disconnects from the active serial port.
 	 */
 	private static void disconnectFromUart() {	
+		InputStream inputstream = uartPort.getInputStream();
+		OutputStream outputstream = uartPort.getOutputStream();
+		System.out.println("OutputStream that is attempted to be disconnected: " + outputstream.toString()); //debug
+		if(uartPort != null && uartPort.isOpen()) {
+			
+			try {
+				inputstream.close(); 
+				outputstream.close();
+			}
+			
+			catch (IOException e) {
+				try {
+					outputstream.close();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					System.out.println("it didnt kill");
+				}
+			}
+		}
+		try { 
+			System.out.println("Active output threads: " + outputstream.toString());
+		}
+		catch (Exception err) {
+			System.out.println("it was killed.");
+		}
 		
-		if(Communication.packet != null)
+		if(Communication.packet != null) {
 			Communication.packet.stopReceivingData();
-		
-		if(uartPort != null && uartPort.isOpen())
-			uartPort.closePort();
-		uartPort = null;
-		
 		Communication.uartConnected = false;
 		notifyConnectionListeners();
-		
+		}
+	}
+	
+	public static void sendoutput(byte[] sendbytes) throws IOException {
+		if (uartPort != null) {
+			OutputStream outputStream = uartPort.getOutputStream();
+			String sendserial = outputStream.toString();
+			System.out.println(outputStream.toString());
+			outputStream.write(sendbytes);
+			
+		}
 	}
 	
 	static Thread tcpServerThread;

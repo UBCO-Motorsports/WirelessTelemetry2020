@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
@@ -47,6 +48,7 @@ public class ControlsRegion extends JPanel {
 			}
 			
 		});
+		
 		
 		JButton saveLayoutButton = new JButton("Save Layout");
 		saveLayoutButton.setEnabled(false);
@@ -118,6 +120,8 @@ public class ControlsRegion extends JPanel {
 			                  "Click the \"Export CSV Log\" button to save all of your acquired samples to a CSV file.<br>" +
 			                  "Click the \"Reset\" button to remove all charts.<br><br>" +
 			                  "Layout files and CSV log files can also be opened via drag-n-drop.<br><br>" +
+			                  "<b>The List of supported Serial Commands includes:</b><br>"+
+			                  "eng-off engine shutdown<br><br>"+
 			                  "Author: Farrell Farahbod<br>" +
 			                  "This software is free and open source.</html>";
 			JLabel helpLabel = new JLabel(helpText);
@@ -136,6 +140,9 @@ public class ControlsRegion extends JPanel {
 			JOptionPane.showMessageDialog(parentWindow, panel, "Help", JOptionPane.PLAIN_MESSAGE);
 
 		});
+	
+		
+		
 		
 		// show the components
 		add(settingsButton);

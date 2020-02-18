@@ -15,9 +15,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -258,7 +260,7 @@ public class CsvPacket extends Packet {
 		thread = new Thread(() -> {
 				
 			BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
-			
+			System.out.println("Thread started: " + thread.getName() + "(" + thread.getId() + ")");
 			while(true) {
 				
 				try {
@@ -285,7 +287,7 @@ public class CsvPacket extends Packet {
 					
 					// stop and end this thread
 					NotificationsController.showVerboseForSeconds("The CSV Packet Processor thread is stopping.", 5, false);
-					try { reader.close(); } catch(Exception e) { }
+					try { reader.close(); } catch(Exception e) { NotificationsController.showVerboseForSeconds("Failed to stop the thread...", 5, false);; }
 					return;
 					
 				}
@@ -304,11 +306,28 @@ public class CsvPacket extends Packet {
 	 * Stops the CSV Packet Processor thread.
 	 */
 	@Override public void stopReceivingData() {
+		int maxAttempts = 10;
 		
 		if(thread != null && thread.isAlive()) {
+			System.out.println("Thread " + thread.getName() + "(" + thread.getId() + ") is alive.");
+			System.out.println("Attempting to interrupt thread...");
 			thread.interrupt();
-			while(thread.isAlive()); // wait
+			
+			System.out.println("Retry...");
+			for (int attempt = 0; attempt < maxAttempts; attempt++) { //ass
+			//int attempt = 0;
+			//while (thread.isAlive() && attempt < maxAttempts) { //ass
+				System.out.println("Attempt #" + attempt);
+				if (thread.isAlive() && attempt >= maxAttempts) {
+					System.out.println("failed to stop thread");
+				}
+				thread.stop();
+			}
 		}
+		else {
+			System.out.println("Thread not needed to be stopped.");	
+		}
+			
 		
 	}
 	
@@ -889,6 +908,12 @@ public class CsvPacket extends Packet {
 			
 		}
 
+	}
+
+	@Override
+	public void startSendingUartData(OutputStream stream) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
