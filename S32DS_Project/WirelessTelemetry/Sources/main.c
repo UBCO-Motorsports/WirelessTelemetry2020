@@ -25,6 +25,7 @@
 
 /* Including necessary module. Cpu.h contains other modules needed for compiling.*/
 #include "Cpu.h"
+#include <math.h>
 
   volatile int exit_code = 0;
 
@@ -43,39 +44,43 @@
 volatile int send_WD = 0;
 
 //Converts an 16 bit integer into a string ready for UART output
-uint8_t Char_Convert (uint16_t input, uint8_t *output);
-uint8_t Char_Convert (uint16_t input, uint8_t *output) {
-	uint16_t temp = input;
-	uint8_t curDigit;
-	uint8_t asciiDigit;
-	uint8_t tempOut[8];
-	int i = 0;
-	if (temp == 0) {
-		//If zero, output asccii zero
-		tempOut[0] = 48U;
-	} else {
-		while (temp > 0) {
-			//Extract next digit
+uint8_t Char_Convert (uint16_t input, uint8_t *output, uint8_t offset);
+uint8_t Char_Convert (uint16_t input, uint8_t *output, uint8_t offset) {
+uint16_t temp = input;
+uint8_t curDigit = 0;
+uint8_t asciiDigit = 0;
+uint8_t tempOut[8] = {0};
+int i = 0;
+if (temp == 0) {
+//If zero, output asccii zero
+tempOut[0] = 48U;
+} else {
+while (temp > 0) {
+//Extract next digit
 
-			curDigit = (temp % 10);
+curDigit = (temp % 10);
 
-			//Convert digit to ascii
-			asciiDigit =  curDigit + 48U;
-			//Load into output array
-			tempOut[i] = asciiDigit;
-			i++;
-			temp = temp / 10;
-		}
-	}
-	//Loop through string reversing endianess for UART
-	int i2 = i;
-	while (i2 >= 0 ) {
-		output[i-i2] = tempOut[i2];
-		i2--;
-	}
-
-	return i+1;
+//Convert digit to ascii
+asciiDigit =  curDigit + 48U;
+//Load into output array
+tempOut[i] = asciiDigit;
+i++;
+temp = temp / 10;
 }
+}
+//Loop through string reversing endianess for UART
+int i2 = i;
+while (i2 >= 0 ) {
+output[i-i2 + offset] = tempOut[i2];
+i2--;
+}
+
+return i+1;
+}
+
+
+
+
 
 void Init_SBC(void);
 void Init_SBC(void) {
@@ -171,12 +176,120 @@ const flexcan_data_info_t dataInfo =
 
 volatile flexcan_msgbuff_t data;
 
+struct message {
+	uint32_t id;
+	uint8_t  bit;
+	uint16_t value;
+	double scaling;
+	double offset;
+};
+volatile struct message messageArray[] = {
+
+
+		{0x360UL, 0, 0,    1,     0}, //Engine RPM values
+		{0x361UL, 2, 0,    1,     -1013}, //Oil Pressure values
+		{0x390UL, 0, 10,    1,     0}, //Oil Temperature
+
+		{0x3E0UL, 0, 0,    1,     -2730}, //Coolant Temperature values
+		{0x360UL, 4, 0,    1,     0}, //Throttle Position values
+		{0x390UL, 0, 10,    1,     0}, //Brake Pressure
+
+		{0x390UL, 0, 10,    1,     0}, //Brake Bias
+		{0x390UL, 0, 10,    1,     0}, //Lat Accel
+		{0x373UL, 0, 10,    1,     -2730}, //EGT 1
+
+		{0x368UL, 0, 0,    1,     0}, //Wideband values
+		{0x390UL, 0, 10,    1,     0}, //GPS Speed
+		{0x3EBUL, 4, 0,    1,     0}, //Ignition Angle values
+
+		{0x390UL, 0, 10	,    1,     0}, //Long Accel
+
+};
+const int messageArrayLength = sizeof(messageArray)/sizeof(messageArray[0]);
+
+//Parse data from the frame and put it into message array
+void parse_data(flexcan_msgbuff_t *data);
+void parse_data(flexcan_msgbuff_t *data){
+	int i;
+	//Go through all messages in array and update the data in the messages with same ID
+	for(i=0; i<messageArrayLength; i++){
+		if(messageArray[i].id == data->msgId){
+			messageArray[i].value = (data->data[messageArray[i].bit+1] & 0xFF)
+								   + ((data->data[messageArray[i].bit] << 8) & 0xF00);
+		}
+	}
+}
+
+//Setup the CAN message callback
+void CANCallback(uint8_t instance, flexcan_event_type_t eventType,
+        uint32_t buffIdx, flexcan_state_t *flexcanState );
+void CANCallback(uint8_t instance, flexcan_event_type_t eventType,
+        uint32_t buffIdx, flexcan_state_t *flexcanState ) {
+
+	if (eventType == FLEXCAN_EVENT_RX_COMPLETE) {
+		switch (buffIdx) {
+			case 0UL:
+					parse_data(&data);
+					FLEXCAN_DRV_ConfigRxMb(INST_CANCOM1, 0UL, &dataInfo, 0x360UL); //Engine RPM values
+					FLEXCAN_DRV_Receive(INST_CANCOM1,0UL,&data);
+					break;
+			case 1UL:
+					parse_data(&data);
+					FLEXCAN_DRV_ConfigRxMb(INST_CANCOM1, 1UL, &dataInfo, 0x361UL); //Oil Pressure values
+					FLEXCAN_DRV_Receive(INST_CANCOM1,1UL,&data);
+					break;
+			case 2UL:
+					parse_data(&data);
+					FLEXCAN_DRV_ConfigRxMb(INST_CANCOM1, 2UL, &dataInfo, 0x3E0UL); //Coolant Temperature values
+					FLEXCAN_DRV_Receive(INST_CANCOM1,2UL,&data);
+					break;
+			case 3UL:
+					parse_data(&data);
+					FLEXCAN_DRV_ConfigRxMb(INST_CANCOM1, 3UL, &dataInfo, 0x368UL); //Wideband values
+					FLEXCAN_DRV_Receive(INST_CANCOM1,3UL,&data);
+					break;
+			case 4UL:
+					parse_data(&data);
+					FLEXCAN_DRV_ConfigRxMb(INST_CANCOM1, 4UL, &dataInfo, 0x3EBUL); //Ignition Angle values
+					FLEXCAN_DRV_Receive(INST_CANCOM1,4UL,&data);
+					break;
+			case 5UL:
+					parse_data(&data);
+					FLEXCAN_DRV_ConfigRxMb(INST_CANCOM1, 5UL, &dataInfo, 0x373UL); //Ignition Angle values
+					FLEXCAN_DRV_Receive(INST_CANCOM1,5UL,&data);
+					break;
+			default:
+				break;
+		}
+	}
+}
+
 
 void init_CAN(void);
 void init_CAN(void){
+	//Initialize message buffers
+	FLEXCAN_DRV_ConfigRxMb(INST_CANCOM1, 0UL, &dataInfo, 0x360UL); //Engine RPM values
+	FLEXCAN_DRV_ConfigRxMb(INST_CANCOM1, 1UL, &dataInfo, 0x361UL); //Oil Pressure values
+	FLEXCAN_DRV_ConfigRxMb(INST_CANCOM1, 2UL, &dataInfo, 0x3E0UL); //Coolant Temperature values
+	FLEXCAN_DRV_ConfigRxMb(INST_CANCOM1, 3UL, &dataInfo, 0x368UL); //Wideband values
+	FLEXCAN_DRV_ConfigRxMb(INST_CANCOM1, 4UL, &dataInfo, 0x3EBUL); //Ignition Angle values
+	FLEXCAN_DRV_ConfigRxMb(INST_CANCOM1, 5UL, &dataInfo, 0x373UL); //Ignition Angle values
 
+	//Install callback
+	FLEXCAN_DRV_InstallEventCallback(INST_CANCOM1, CANCallback,NULL);
 
+	//Start receiving
+	FLEXCAN_DRV_Receive(INST_CANCOM1,0UL, &data);
+	FLEXCAN_DRV_Receive(INST_CANCOM1,1UL, &data);
+	FLEXCAN_DRV_Receive(INST_CANCOM1,2UL, &data);
+	FLEXCAN_DRV_Receive(INST_CANCOM1,3UL, &data);
+	FLEXCAN_DRV_Receive(INST_CANCOM1,4UL, &data);
+	FLEXCAN_DRV_Receive(INST_CANCOM1,5UL, &data);
 }
+
+
+//Insert Double into a message
+
 
 
 /*!
@@ -199,6 +312,7 @@ int main(void)
 
 
     Init_Board();
+	init_CAN();
 
     for (;;) {
 
@@ -206,36 +320,73 @@ int main(void)
     		FeedWatchDog();
     		send_WD = 0;
 
-    		//Example CAN receive code
+    		//Init CAN messages
 
 
-			//Configure receiving message muffer
-			FLEXCAN_DRV_ConfigRxMb(INST_CANCOM1, 0UL, &dataInfo, 0x360UL);
-    		status_t canResult;
-
-
-    		//Receive message, blocking
-    		canResult = FLEXCAN_DRV_ReceiveBlocking(INST_CANCOM1, 0UL, &data, 20);
-
-    		uint16_t RPM;
-    		RPM = (data.data[1] & 0xFF) + ((data.data[0] << 8) & 0xF00);
-
-    		uint16_t TPS;
-			TPS = (data.data[5] & 0xFF) + ((data.data[4] << 8) & 0xF00);
-
-
-
-    		//Example sending over UART
-
-    		uint8_t uartmessage[8];
+    		uint8_t uartmessage[128];
     		uint8_t length;
-    		length = Char_Convert(RPM, uartmessage);
+    		int i;
+    		double value;
+    		uint16_t valueBeforeDecimal;
+    		uint16_t valueAfterDecimal;
+
+    		length = 0;
+    		value = messageArray[0].value * messageArray[0].scaling +messageArray[0].offset;
+    		valueBeforeDecimal = (uint16_t)floor(value);
+    		valueAfterDecimal = (uint16_t)round((value - valueBeforeDecimal)*10);
+
+    		length = length + Char_Convert((uint16_t)(valueBeforeDecimal), uartmessage, length);
+//    		uartmessage[length] = 46;
+//    		length++;
+//    		length = length + Char_Convert((uint16_t)(valueAfterDecimal), uartmessage, length);
 
 
-			//\r\n
+    		for (i = 1;i<messageArrayLength;i++) {
+    		uartmessage[length] = 44;
+    		length++;
+//    		uartmessage[length] = 32;
+//    		length++;
+    		//Scale the value from the message and split it into value before and after decimal place
+    		value = messageArray[i].value * messageArray[i].scaling +messageArray[i].offset;
+    		if (value >=0){
+				valueBeforeDecimal = floor(value);
+				valueAfterDecimal =  round((value - valueBeforeDecimal)*10);
+    		}else{
+        		uartmessage[length] = 45;
+        		length++;
+    			value = -value;
+				valueBeforeDecimal = floor(value);
+				valueAfterDecimal =  floor((value - valueBeforeDecimal)*10);
+    		}
+    		length = length + Char_Convert(valueBeforeDecimal, uartmessage, length);
+//    		uartmessage[length] = 46;
+//    		length++;
+//    		length = length + Char_Convert(valueAfterDecimal, uartmessage, length);
+    		}
+
+
+
+    		//\r\n
     		uartmessage[length] = 13;
     		uartmessage[length+1] = 10;
     		LPUART_DRV_SendDataBlocking(INST_LPUART1,uartmessage, length+2, 1000);
+
+
+    		uint8_t receiveBuffer[8];
+    		receiveBuffer[0] = 0;
+    		LPUART_DRV_ReceiveDataBlocking(INST_LPUART1,receiveBuffer,1,10);
+
+//    		//Example sending over UART
+//
+//    		uint8_t uartmessage[8];
+//    		uint8_t length;
+//    		length = Char_Convert(messageArray[0].value, uartmessage);
+//
+//
+//			//\r\n
+//    		uartmessage[length] = 13;
+//    		uartmessage[length+1] = 10;
+//    		LPUART_DRV_SendDataBlocking(INST_LPUART1,uartmessage, length+2, 1000);
 
 
     		PINS_DRV_TogglePins(LED1PORT, 1 << LED1PIN);
