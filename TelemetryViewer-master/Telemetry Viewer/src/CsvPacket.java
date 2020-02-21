@@ -19,8 +19,6 @@ import java.io.OutputStream;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;

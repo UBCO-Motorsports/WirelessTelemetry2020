@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.function.Consumer;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
@@ -660,7 +658,6 @@ public class CommunicationController {
 	public static void sendoutput(byte[] sendbytes) throws IOException {
 		if (uartPort != null) {
 			OutputStream outputStream = uartPort.getOutputStream();
-			String sendserial = outputStream.toString();
 			System.out.println(outputStream.toString());
 			outputStream.write(sendbytes);
 			
