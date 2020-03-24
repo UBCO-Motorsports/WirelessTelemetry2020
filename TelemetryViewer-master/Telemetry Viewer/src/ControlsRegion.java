@@ -126,13 +126,14 @@ public class ControlsRegion extends JPanel {
 			                  "Click the gear icon at the top-right corner of any chart to change its settings.<br><br>" +
 			                  "Click the \"Settings\" button to adjust options related to the GUI.<br>" +
 			                  "Click the \"Open Layout\" button to open a previously saved layout file.<br>" +
+			                  "To use the \"Use Default\" option you must have the JAR file in its own folder with only the txt layout file<br>"+
 			                  "Click the \"Save Layout\" button to save your current configuration (connection settings, data structure, and chart settings) to a file.<br>" +
 			                  "Click the \"Import CSV Log\" button to import a previously saved CSV file.<br>" +
 			                  "Click the \"Export CSV Log\" button to save all of your acquired samples to a CSV file.<br>" +
 			                  "Click the \"Reset\" button to remove all charts.<br><br>" +
 			                  "Layout files and CSV log files can also be opened via drag-n-drop.<br><br>" +
 			                  "<b>The List of supported Serial Commands includes:</b><br>"+
-			                  "eng-off engine shutdown<br><br>"+
+			                  "None available currently :(<br><br>"+
 			                  "Author: Farrell Farahbod<br>" +
 			                  "Adapted for UBCO Motorsports by Joel Sol<br>"+
 			                  "This software is free and open source.</html>";

@@ -12,7 +12,6 @@ GUI Settings:
 
 Communication Settings:
 
-	port = UART: COM10
 	uart baud rate = 9600
 	tcp/udp port number = 8080
 	packet type = CSV
