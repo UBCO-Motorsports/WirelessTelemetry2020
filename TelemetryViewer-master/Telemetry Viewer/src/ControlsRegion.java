@@ -127,6 +127,7 @@ public class ControlsRegion extends JPanel {
 			                  "Click the \"Settings\" button to adjust options related to the GUI.<br>" +
 			                  "Click the \"Open Layout\" button to open a previously saved layout file.<br>" +
 			                  "To use the \"Use Default\" option you must have the JAR file in its own folder with only the txt layout file<br>"+
+			                  "For the \"Use Default\" option to work you must name the txt file \"layout.txt\" and have it in the application directory<br>"+
 			                  "Click the \"Save Layout\" button to save your current configuration (connection settings, data structure, and chart settings) to a file.<br>" +
 			                  "Click the \"Import CSV Log\" button to import a previously saved CSV file.<br>" +
 			                  "Click the \"Export CSV Log\" button to save all of your acquired samples to a CSV file.<br>" +
