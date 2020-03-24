@@ -45,6 +45,7 @@ public class Main {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
 		
+		NotificationsController.showHintForSeconds("UBCO Wireless Telemetry V1.0 \"It just works edition\"", 5, true);
 		NotificationsController.showHintUntil("Start by connecting to a device or opening a file by using the buttons below.", () -> CommunicationController.isConnected() || !Controller.getCharts().isEmpty(), true);
 		
 		LogitechSmoothScrolling mouse = new LogitechSmoothScrolling();

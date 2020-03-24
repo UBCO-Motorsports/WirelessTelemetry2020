@@ -263,7 +263,6 @@ public class Controller {
 			
 			outputFile.println("Communication Settings:");
 			outputFile.println("");
-			outputFile.println("\tport = " +                CommunicationController.getPort());
 			outputFile.println("\tuart baud rate = " +      CommunicationController.getBaudRate());
 			outputFile.println("\ttcp/udp port number = " + CommunicationController.getPortNumber());
 			outputFile.println("\tpacket type = " +         CommunicationController.getPacketType());
@@ -343,6 +342,7 @@ public class Controller {
 	 */
 	static void openLayout(String inputFilePath, boolean connect) {
 		
+		String portsaver =CommunicationController.getPort();
 		CommunicationController.disconnect();
 		Controller.removeAllCharts();
 		DatasetsController.removeAllDatasets();
@@ -378,7 +378,6 @@ public class Controller {
 			ChartUtils.parseExact(lines.remove(), "Communication Settings:");
 			ChartUtils.parseExact(lines.remove(), "");
 			
-			String portName   = ChartUtils.parseString (lines.remove(), "port = %s");
 			int baudRate      = ChartUtils.parseInteger(lines.remove(), "uart baud rate = %d");
 			int tcpUdpPort    = ChartUtils.parseInteger(lines.remove(), "tcp/udp port number = %d");
 			String packetType = ChartUtils.parseString (lines.remove(), "packet type = %s");
@@ -387,7 +386,7 @@ public class Controller {
 			int sampleRate    = ChartUtils.parseInteger(lines.remove(), "sample rate = %d");
 			ChartUtils.parseExact(lines.remove(), "");
 			
-			CommunicationController.setPort(portName);
+			CommunicationController.setPort(portsaver);
 			CommunicationController.setBaudRate(baudRate);
 			CommunicationController.setPortNumber(tcpUdpPort);
 			CommunicationController.setPacketType(packetType);

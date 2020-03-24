@@ -37,16 +37,28 @@ public class ControlsRegion extends JPanel {
 		settingsButton.addActionListener(event -> settingsView.setVisible(settingsButton.isSelected()));
 		
 		openLayoutButton = new JButton("Open Layout");
+		openLayoutButton.setEnabled(false);
 		openLayoutButton.addActionListener(event -> {
 			
-			JFileChooser inputFile = new JFileChooser();
-			JFrame parentWindow = (JFrame) SwingUtilities.windowForComponent(ControlsRegion.this);
-			if(inputFile.showOpenDialog(parentWindow) == JFileChooser.APPROVE_OPTION) {
-				String filePath = inputFile.getSelectedFile().getAbsolutePath();
+			
+			Object[] options = {"Use Default","File Select"};
+			int layoutchooser = JOptionPane.showOptionDialog(null,"Please select an option.","Open Layout Options",
+					JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,null,options,options[0]);
+			
+			if(layoutchooser ==JOptionPane.YES_OPTION) {
+				String filePath = "./layout.txt";
 				Controller.openLayout(filePath, true);
 			}
 			
-		});
+			if(layoutchooser ==JOptionPane.NO_OPTION) {
+				JFileChooser inputFile = new JFileChooser();
+				JFrame parentWindow = (JFrame) SwingUtilities.windowForComponent(ControlsRegion.this);
+				if(inputFile.showOpenDialog(parentWindow) == JFileChooser.APPROVE_OPTION) {
+					String filePath = inputFile.getSelectedFile().getAbsolutePath();
+				Controller.openLayout(filePath, true);
+			}}
+			});
+		CommunicationController.addConnectionListener(newConnectionState -> openLayoutButton.setEnabled(newConnectionState));
 		
 		
 		JButton saveLayoutButton = new JButton("Save Layout");
@@ -122,6 +134,7 @@ public class ControlsRegion extends JPanel {
 			                  "<b>The List of supported Serial Commands includes:</b><br>"+
 			                  "eng-off engine shutdown<br><br>"+
 			                  "Author: Farrell Farahbod<br>" +
+			                  "Adapted for UBCO Motorsports by Joel Sol<br>"+
 			                  "This software is free and open source.</html>";
 			JLabel helpLabel = new JLabel(helpText);
 			JButton websiteButton = new JButton("<html><a href=\"http://www.farrellf.com/TelemetryViewer/\">http://www.farrellf.com/TelemetryViewer/</a></html>");
