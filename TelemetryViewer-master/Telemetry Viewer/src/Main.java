@@ -18,13 +18,13 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 
 public class Main {
-
+	
 	@SuppressWarnings("serial")
 	public static void main(String[] args) {
-		
+		new SplashScreen();
 		try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); } catch(Exception e){}
 		
-		JFrame window = new JFrame("Telemetry Viewer v1.0 [UBCO Motorsports]");
+		JFrame window = new JFrame("Telemetry Viewer v1.2 [UBCO Motorsports]");
 		NotificationsView notificationsRegion = new NotificationsView();
 		SettingsView settingsRegion = new SettingsView();
 		ControlsRegion controlsRegion = new ControlsRegion(settingsRegion);
@@ -45,7 +45,7 @@ public class Main {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
 		
-		NotificationsController.showHintForSeconds("UBCO Wireless Telemetry V1.0 \"It just works edition\"", 5, true);
+		NotificationsController.showHintForSeconds("UBCO Wireless Telemetry V1.2 \"It just works edition\"", 5, true);
 		NotificationsController.showHintUntil("Start by connecting to a device or opening a file by using the buttons below.", () -> CommunicationController.isConnected() || !Controller.getCharts().isEmpty(), true);
 		
 		LogitechSmoothScrolling mouse = new LogitechSmoothScrolling();
