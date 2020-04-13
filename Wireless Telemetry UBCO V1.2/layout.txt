@@ -1,0 +1,273 @@
+Telemetry Viewer File Format v0.6
+
+GUI Settings:
+
+	tile column count = 12
+	tile row count = 12
+	show plot tooltips = true
+	smooth scrolling = true
+	opengl antialiasing = true
+	show fps and period = false
+	chart index for benchmarks = -1
+
+Communication Settings:
+
+	uart baud rate = 9600
+	tcp/udp port number = 8080
+	packet type = CSV
+	sample rate = 10000
+
+13 Data Structure Locations:
+
+	location = 0
+	processor index = -1
+	name = Engine RPM
+	color = 0xFF0000
+	unit = RPM
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 1
+	processor index = -1
+	name = Oil Pressure
+	color = 0xCC00CC
+	unit = PSI
+	conversion factor a = 68.5
+	conversion factor b = 1.0
+
+	location = 2
+	processor index = -1
+	name = Oil Temperature
+	color = 0x009999
+	unit = C
+	conversion factor a = 100.0
+	conversion factor b = 1.0
+
+	location = 3
+	processor index = -1
+	name = Coolant Temperature
+	color = 0xCC0000
+	unit = C
+	conversion factor a = 10.0
+	conversion factor b = 1.0
+
+	location = 4
+	processor index = -1
+	name = Throttle Position
+	color = 0x339900
+	unit = %
+	conversion factor a = 10.0
+	conversion factor b = 1.0
+
+	location = 5
+	processor index = -1
+	name = Brake Pressure
+	color = 0x990099
+	unit = PSI
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 6
+	processor index = -1
+	name = Brake Bias
+	color = 0x009999
+	unit = %
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 7
+	processor index = -1
+	name = Lat Accel
+	color = 0xCC0000
+	unit = G's
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 8
+	processor index = -1
+	name = Max EGT
+	color = 0x33CC00
+	unit = C
+	conversion factor a = 10.0
+	conversion factor b = 1.0
+
+	location = 9
+	processor index = -1
+	name = Wideband
+	color = 0x990099
+	unit = Lambda
+	conversion factor a = 1000.0
+	conversion factor b = 1.0
+
+	location = 10
+	processor index = -1
+	name = GPS Speed
+	color = 0x000000
+	unit = kph
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+	location = 11
+	processor index = -1
+	name = Ignition Angle
+	color = 0xCC6600
+	unit = Degrees
+	conversion factor a = 10.0
+	conversion factor b = 1.0
+
+	location = 12
+	processor index = -1
+	name = Long Accel
+	color = 0x0099CC
+	unit = G's
+	conversion factor a = 1.0
+	conversion factor b = 1.0
+
+Checksum:
+
+	location = -1
+	checksum processor index = -1
+
+8 Charts:
+
+	chart type = Time Domain Chart
+	top left x = 6
+	top left y = 0
+	bottom right x = 11
+	bottom right y = 4
+	datasets = 1,2
+	duration type = Seconds
+	duration = 30.0
+	autoscale y-axis minimum = true
+	manual y-axis minimum = -1.0
+	autoscale y-axis maximum = true
+	manual y-axis maximum = 1.0
+	show x-axis title = true
+	show x-axis scale = true
+	show y-axis title = true
+	show y-axis scale = true
+	show legend = true
+
+	chart type = Time Domain Chart
+	top left x = 6
+	top left y = 5
+	bottom right x = 11
+	bottom right y = 8
+	datasets = 3,8
+	duration type = Seconds
+	duration = 30.0
+	autoscale y-axis minimum = true
+	manual y-axis minimum = -1.0
+	autoscale y-axis maximum = true
+	manual y-axis maximum = 1.0
+	show x-axis title = true
+	show x-axis scale = true
+	show y-axis title = true
+	show y-axis scale = true
+	show legend = true
+
+	chart type = Time Domain Chart
+	top left x = 0
+	top left y = 5
+	bottom right x = 5
+	bottom right y = 8
+	datasets = 9,11
+	duration type = Seconds
+	duration = 30.0
+	autoscale y-axis minimum = true
+	manual y-axis minimum = -1.0
+	autoscale y-axis maximum = true
+	manual y-axis maximum = 1.0
+	show x-axis title = true
+	show x-axis scale = true
+	show y-axis title = true
+	show y-axis scale = true
+	show legend = true
+
+	chart type = Time Domain Chart
+	top left x = 0
+	top left y = 9
+	bottom right x = 5
+	bottom right y = 11
+	datasets = 5,6
+	duration type = Seconds
+	duration = 30.0
+	autoscale y-axis minimum = true
+	manual y-axis minimum = -1.0
+	autoscale y-axis maximum = true
+	manual y-axis maximum = 1.0
+	show x-axis title = true
+	show x-axis scale = true
+	show y-axis title = true
+	show y-axis scale = true
+	show legend = true
+
+	chart type = Time Domain Chart
+	top left x = 6
+	top left y = 9
+	bottom right x = 8
+	bottom right y = 11
+	datasets = 7,12
+	duration type = Seconds
+	duration = 30.0
+	autoscale y-axis minimum = true
+	manual y-axis minimum = -1.0
+	autoscale y-axis maximum = true
+	manual y-axis maximum = 1.0
+	show x-axis title = true
+	show x-axis scale = true
+	show y-axis title = true
+	show y-axis scale = true
+	show legend = true
+
+	chart type = Dial Chart
+	top left x = 0
+	top left y = 0
+	bottom right x = 2
+	bottom right y = 4
+	datasets = 0
+	autoscale dial minimum = false
+	manual dial minimum = 0.0
+	autoscale dial maximum = false
+	manual dial maximum = 15000.0
+	sample count = 1000
+	show dataset label = true
+	show reading label = true
+	show min/max labels = true
+	show statistics = true
+
+	chart type = Time Domain Chart
+	top left x = 3
+	top left y = 0
+	bottom right x = 5
+	bottom right y = 4
+	datasets = 4
+	duration type = Seconds
+	duration = 30.0
+	autoscale y-axis minimum = false
+	manual y-axis minimum = 0.0
+	autoscale y-axis maximum = false
+	manual y-axis maximum = 100.0
+	show x-axis title = true
+	show x-axis scale = true
+	show y-axis title = true
+	show y-axis scale = true
+	show legend = true
+
+	chart type = Time Domain Chart
+	top left x = 9
+	top left y = 9
+	bottom right x = 11
+	bottom right y = 11
+	datasets = 10
+	duration type = Seconds
+	duration = 30.0
+	autoscale y-axis minimum = true
+	manual y-axis minimum = -1.0
+	autoscale y-axis maximum = true
+	manual y-axis maximum = 1.0
+	show x-axis title = true
+	show x-axis scale = true
+	show y-axis title = true
+	show y-axis scale = true
+	show legend = true
